@@ -26,7 +26,4 @@ class Chat extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function attachments(): hasMany{
-        return $this->hasMany(Attachment::class);
-    }
 }
