@@ -16,6 +16,10 @@ class MessageController extends Controller
         return Message::all();
     }
 
+    public function list($id){
+        return Message::where('chat_id', $id)->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
