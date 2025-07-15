@@ -10,7 +10,7 @@ class Message extends Model
 {
     protected $table = 'messages';
 
-    protected $fillable = ['text']; // возможно, нужно добавить id чата и отправителя
+    protected $fillable = ['text', 'chat_id', 'sender_id', 'is_read']; // возможно, нужно добавить id чата и отправителя
 
     public function chat(): BelongsTo{
         return $this->belongsTo(Chat::class);
