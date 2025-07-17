@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_groups', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('client_id')->unsigned();
-            $table->bigInteger('order_id')->unsigned();
+            $table->uuid('id')->primary();
+            $table->string('title');
             $table->boolean('is_archived');
             $table->timestamps();
         });

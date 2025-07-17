@@ -19,7 +19,11 @@ class ChatGroupController extends Controller
      */
     public function store(Request $request)
     {
-        $group = ChatGroup::create($request->all());
+        $group = ChatGroup::create($request->validate(
+            [
+                'title' => ['required', 'string', 'max:100'],
+            ]
+        ));
         return $group;
     }
 
@@ -36,7 +40,11 @@ class ChatGroupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $id->update($request->all());
+        return $id->update($request->validate(
+            [
+                'title' => ['required', 'string'],
+            ]
+        ));
     }
 
     /**

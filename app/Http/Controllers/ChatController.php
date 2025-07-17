@@ -20,7 +20,13 @@ class ChatController extends Controller
      */
     public function store(Request $request)
     {
-        return Chat::create($request->all());
+        return Chat::create($request->validate(
+            [
+                'title' => ['required','string','max:100'],
+                'chat_type' => ['required','string', 'in:personal,group'],
+                'chat_group_id' => ['required','integer'],
+            ]
+        ));
     }
 
     /**
@@ -36,7 +42,10 @@ class ChatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return Chat::findOrFail($id)->update($request->all());
+        return Chat::findOrFail($id)
+                    ->update($request->validate([
+                        'title'=> ['required','string','max:100'],
+                    ]));
     }
 
     /**

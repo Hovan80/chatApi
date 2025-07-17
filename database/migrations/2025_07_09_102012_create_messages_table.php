@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('chat_id')->unsigned();
             $table->bigInteger('sender_id')->unsigned();
-            $table->string('text');
-            $table->boolean('is_read');
+            $table->string('body', 4020);
             $table->timestamps();
             $table->foreign('chat_id')->references('id')->on('chats');
             $table->foreign('sender_id')->references('id')->on('users');

@@ -43,7 +43,9 @@ class MessageController extends Controller
     public function update(Request $request, $id)
     {
         $message = Message::findOrFail($id);
-        $message->update($request->all());
+        $message->update($request->validate(
+            ['body' => ['required', 'string', ]]
+        ));
         return $message->id;
     }
 
