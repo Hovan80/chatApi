@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 class ChatGroupController extends Controller
 {
     /**
@@ -11,7 +12,8 @@ class ChatGroupController extends Controller
      */
     public function index()
     {
-        return ChatGroup::all();
+        $group = ChatGroup::orderBy("id","desc")->get();
+        return response()->json(['data' => $group]);
     }
 
     /**
@@ -19,39 +21,48 @@ class ChatGroupController extends Controller
      */
     public function store(Request $request)
     {
-        $group = ChatGroup::create($request->validate(
-            [
-                'title' => ['required', 'string', 'max:100'],
-            ]
-        ));
-        return $group;
+        $validator = Validator::make($request->all(), [
+            'title' => ['required', 'string','max:100'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()],422);
+        }
+        $group = ChatGroup::create($request->all());
+        return response()->json([
+            'data'=> $group,
+            'meessage' => 'Chats group created successfully'
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(ChatGroup $group)
     {
-        return ChatGroup::findOrFail($id);
+        return response()->json(['data' => $group]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ChatGroup $group)
     {
-        return $id->update($request->validate(
-            [
-                'title' => ['required', 'string'],
-            ]
-        ));
+        $validator = Validator::make($request->all(), [
+            'title'=> ['string','max:100'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()],422);
+        }
+        $group->update($request->all());
+        return response()->json(['data'=> $group]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(ChatGroup $group)
     {
-        return ChatGroup::destroy($id);
+        $group->update(['is_deleted' => true]);
+        return response()->json(['message' => 'Chats group deleted successfully']);
     }
 }

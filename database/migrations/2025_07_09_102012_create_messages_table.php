@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('chat_id')->unsigned();
-            $table->bigInteger('sender_id')->unsigned();
+            $table->foreignId('chat_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->string('body', 4020);
             $table->timestamps();
-            $table->foreign('chat_id')->references('id')->on('chats');
-            $table->foreign('sender_id')->references('id')->on('users');
+            $table->boolean('is_deleted')->default(false);
         });
     }
 

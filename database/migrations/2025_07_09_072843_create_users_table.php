@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('display_name');
             $table->timestamp('last_login')->nullable();
-            $table->boolean('is_active');
+            $table->boolean('is_deleted');
             $table->rememberToken();
             $table->timestamps();
         });

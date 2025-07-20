@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create("chat_members", function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->bigInteger('chat_id')->unsigned();
-            $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('chat_id')->references('id')->on('chats');
+            $table->foreignId('chat_id')->unsigned();
+            $table->boolean('is_admin')->default(false);
+            $table->timestamp('joined_at')->useCurrent();
+            $table->timestamp('left_at')->nullable();
+            $table->boolean('is_deleted')->default(false);
         });
     }
 

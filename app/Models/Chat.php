@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Chat extends Model
 {
     protected $table = "chats";
-    protected $fillable = ["title, chat_type, chat_group_id"];
+    protected $fillable = ["title, chat_type, chat_group_id, is_deleted"];
 
     public function chatGroup(): BelongsTo
     {

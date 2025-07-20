@@ -17,14 +17,16 @@ Route::apiResource('/chats_group', ChatGroupController::class);
 
 Route::apiResource('/chats', ChatController::class);
 
+Route::apiResource('/members', MessageController::class);
 
 Route::apiResource('/messages', MessageController::class);
 Route::get('/chats/{id}/messages', [MessageController::class, 'list']);
 
 Route::controller(ReadMessageController::class)->group(function (){
-    Route::get('/messages/{message_id}/read', 'index');
-    Route::get('/users/{user_id}/read', 'show');
-    Route::post('/messages/{message_id}/read/{user_id}', 'store');
+    Route::get('/messages/read', 'index');
+    Route::get('/messages/{messageId}/read', 'list');
+    Route::get('/messages/{message_id}/read/{user_id}', 'show');
+    Route::post('/messages/read/', 'store');
     Route::delete('/messages/{message_id}/read/{user_id}', 'delete');
 });
 

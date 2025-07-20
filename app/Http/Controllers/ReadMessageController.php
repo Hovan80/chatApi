@@ -2,39 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\ReadMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ReadMessageController extends Controller
 {
     /**
-     * Список пользователей, прочитавших сообщение
+     * Все прочтения
      */
-    public function index(int $messageId)
+    public function index()
     {
-        return ReadMessage::where('message_id', $messageId)->orderBy('created_at','desc')->user();
+        $read = ReadMessage::orderBy('created_at','desc')->get();
+        return response()->json(['data' => $read]);
+    }
+    /**
+     *Список пользователей, прочитавших сообщение
+     */
+    public function list(Message $message){
+        $read = ReadMessage::where('message_id', $message->id())->orderBy('created_at','desc')->get();
+        return response()->json(['data'=> $read]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, int $messageId, int $userId)
+    public function store(Request $request)
     {
-        $read = ReadMessage::create(
-            [
-                'message_id'=> $messageId,
-                'user_id'=> $userId,
-            ]
-        );
-        return $read;
+        $validator = Validator::make($request->all(), [
+            'message_id'=> ['required','integer','exists:messages,id'],
+            'user_id'=> [
+                'required',
+                'integer',
+                'exists:users, id',
+                Rule::exists('read_messages','user_id')
+                    ->where('message_id', $request->input('message_id')),
+            ],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data' => $validator->errors()],422);
+        }
+        $read = ReadMessage::create($request->all());
+        return response()->json(['data'=> $read, 'message' => 'The message was read successfully']);
     }
 
     /**
-     * Сообщения, прочитанные пользователем
+     * Возвращает само прочтение
      */
-    public function show(int $userId)
+    public function show(int $messageId, int $userId)
     {
-        return ReadMessage::where('user_id', $userId)->orderBy('created_at','desc')->message();
+        $read = ReadMessage::where([
+            ['message','=', $messageId],
+            ['user_id','=', $userId],
+        ])->get();
+        return response()->json(['data'=> $read]);
     }
 
     /**
@@ -42,9 +65,10 @@ class ReadMessageController extends Controller
      */
     public function destroy($messageId, $userId)
     {
-        return ReadMessage::where( [
+        ReadMessage::where( [
                 ['message_id','=', $messageId],
                 ['user_id','=', $userId],
-            ])->first()->delete();
+            ])->delete();
+        return response()->json(['message' => 'Message has become unread successfully']);
     }
 }

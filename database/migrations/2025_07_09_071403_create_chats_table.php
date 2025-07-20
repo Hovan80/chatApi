@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->enum('chat_type', ['personal', 'group']);
-            $table->uuid('chat_group_uuid');
+            $table->uuid('chat_group_id');
             $table->timestamps();
-            $table->foreign('chat_group_uuid')->references('id')->on('chat_groups');
+            $table->foreign('chat_group_id')->references('id')->on('chat_groups');
         });
     }
 

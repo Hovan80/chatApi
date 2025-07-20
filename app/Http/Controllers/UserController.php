@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Validator;
+
 
 class UserController extends Controller
 {
@@ -13,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $users = User::all();
+        return response()->json(['datra' => $users]);
     }
 
     /**
@@ -21,29 +24,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create($request->validate(
-            [
-                'login' => ['required', 'string', 'min:6'],
-                'password' => [
-                    'required',
-                    Password::min(8)
-                        ->letters()
-                        ->mixedCase()
-                        ->numbers()
-                        ->symbols()
-                ],
-                'display_name' => ['required', 'string']
-            ]
-        ));
-        return $user->id;
+        $validator = Validator::make($request->all(), [
+            'login'=> [
+                'required',
+                'string',
+                'min:6',
+                'unique:users,login',
+            ],
+            'password' => [
+                'required',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
+            'display_name' => ['required', 'string', 'max:60']
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()],422);
+        }
+        $user = User::create($request->all());
+
+        return response()->json(['data' => $user]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(User $user)
     {
-        return User::findOrFail($id); 
+        return response()->json(['data' => $user]); 
     }
 
     /**
