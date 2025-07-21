@@ -10,7 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends Model
 {
     protected $table = 'users';
-    protected $fillable = ['login', 'password', 'display_name', 'last_login', 'is_delted'];
+    protected $fillable = ['login', 'password', 'display_name', 'last_login'];
+    protected $casts = [
+        'last_login' => 'datetime',
+        'updated_at'=> 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
 
     public function chats(): BelongsToMany{
         return $this->belongsToMany(Chat::class);

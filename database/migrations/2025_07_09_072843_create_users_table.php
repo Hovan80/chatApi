@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
             $table->string('login')->unique();
             $table->string('password');
             $table->string('display_name');
             $table->timestamp('last_login')->nullable();
-            $table->boolean('is_deleted');
+            $table->softDeletes('deleted_at');
             $table->rememberToken();
             $table->timestamps();
         });

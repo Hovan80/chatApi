@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json(['datra' => $users]);
+        return response()->json(['data' => $users]);
     }
 
     /**
@@ -39,14 +39,17 @@ class UserController extends Controller
                     ->numbers()
                     ->symbols()
             ],
-            'display_name' => ['required', 'string', 'max:60']
+            'display_name' => ['required', 'string',]
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
         }
         $user = User::create($request->all());
 
-        return response()->json(['data' => $user]);
+        return response()->json([
+            'data' => $user,
+            'message' => 'User created successfully'
+        ]);
     }
 
     /**
@@ -60,22 +63,39 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-        $user->update($request->validate(
-            [
-                'display_name' => ['required', 'string'],
-            ]
-        ));
-        return $user;
+        $validator = Validator::make($request->all(), [
+            'login'=> [
+                'string',
+                'min:6',
+                'unique:users,login',
+            ],
+            'password' => [
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
+            'display_name' => ['string', 'filled']
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()],422);
+        }
+        $user->update($request->all());
+        return response()->json([
+            'data' => $user,
+            'message'=> 'User updated successfully'
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(User $user)
     {
-        return User::destroy($id);
+        $user->delete();
+        return response()->json(['message' => 'Usere deleted successfully']);
     }
 }

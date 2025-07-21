@@ -10,7 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Chat extends Model
 {
     protected $table = "chats";
-    protected $fillable = ["title, chat_type, chat_group_id, is_deleted"];
+    protected $fillable = ["title, chat_type, chat_group_id"];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at'=> 'datetime',
+        'deleted_at' => 'datetime'
+    ];
 
     public function chatGroup(): BelongsTo
     {

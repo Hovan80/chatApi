@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create("chat_members", function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreignId('chat_id')->unsigned();
+            $table->id()->primary();
+            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('chat_id')->constrained('chats', 'id');
             $table->boolean('is_admin')->default(false);
-            $table->timestamp('joined_at')->useCurrent();
-            $table->timestamp('left_at')->nullable();
-            $table->boolean('is_deleted')->default(false);
+            $table->timestamps();
+            $table->softDeletes('deleted_at');
         });
     }
 

@@ -77,7 +77,7 @@ class ChatMemberController extends Controller
      */
     public function destroy(ChatMember $member)
     {
-        $member->update(['is_deleted' => true]);
+        $member->delete();
         return response()->json(['message' => 'Member deleted successfully']);
     }
 }

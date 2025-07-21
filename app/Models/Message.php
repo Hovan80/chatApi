@@ -10,10 +10,12 @@ class Message extends Model
 {
     protected $table = 'messages';
 
-    protected $fillable = ['chat_id', 'user_id', 'body', 'is_deleted'];
+    protected $fillable = ['chat_id', 'user_id', 'body'];
 
     protected $casts = [
-        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function chat(): BelongsTo{

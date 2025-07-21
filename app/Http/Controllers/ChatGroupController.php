@@ -62,7 +62,7 @@ class ChatGroupController extends Controller
      */
     public function destroy(ChatGroup $group)
     {
-        $group->update(['is_deleted' => true]);
+        $group->delete();
         return response()->json(['message' => 'Chats group deleted successfully']);
     }
 }

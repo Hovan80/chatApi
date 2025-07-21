@@ -89,9 +89,7 @@ class MessageController extends Controller
      */
     public function destroy(Message $message)
     {
-        $message->update([
-            'is_deleted' => true
-        ]);
+        $message->delete();
         return response()->json(['message' => 'Message delete successfully']);
     }
 }

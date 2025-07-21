@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_groups', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id()->primary();
+            $table->uuid('uuid');
             $table->string('title');
-            $table->boolean('is_deleted');
+            $table->softDeletes('deleted_at');
             $table->timestamps();
         });
     }

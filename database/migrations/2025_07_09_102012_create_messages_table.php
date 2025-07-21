@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('chat_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->id()->primary();
+            $table->foreignId('chat_id')->constrained('chats', 'id');
+            $table->foreignId('user_id')->constrained('users','id');
             $table->string('body', 4020);
             $table->timestamps();
-            $table->boolean('is_deleted')->default(false);
+            $table->softDeletes('deleted_at');
         });
     }
 

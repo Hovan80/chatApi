@@ -12,13 +12,12 @@ class ChatMember extends Model
         'chat_id',
         'user_id',
         'is_admin',
-        'joined_at',
-        'left_at',
     ];
 
     protected $casts = [
-        'joined_at' => 'datetime',
-        'left_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at_at' => 'datetime',
+        'deleted_at' => 'datetime',
         'is_admin' => 'boolean',
     ];
 

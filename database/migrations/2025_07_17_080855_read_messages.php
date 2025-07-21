@@ -12,13 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('read_messages', function (Blueprint $table) {
-            $table->bigInteger('user_id');
-            $table->bigInteger('message_id');
-            $table->timestamp('read_at')->useCurrent();
-            $table->index('user_id');
-            $table->index('message_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('message_id')->constrained('messages', 'id');
+            $table->timestamps();
+            $table->primary(['user_id','message_id']);
         });
     }
 

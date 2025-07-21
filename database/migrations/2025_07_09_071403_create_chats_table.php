@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chats', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
+            $table->foreignId('chat_group_id')->constrained('chat_groups', 'id');
             $table->string('title');
             $table->enum('chat_type', ['personal', 'group']);
-            $table->uuid('chat_group_id');
             $table->timestamps();
-            $table->foreign('chat_group_id')->references('id')->on('chat_groups');
+            $table->softDeletes('deleted_at');
         });
     }
 

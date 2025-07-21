@@ -10,7 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ChatGroup extends Model
 {
     protected $table = 'chat_groups';
-    protected $fillable = ['title', 'is_deleted'];
+    protected $fillable = ['title'];
+
+    protected $casts = [
+        'created_at'=> 'datetime',
+        'updated_at'=> 'datetime',
+        'deleted_at' => 'datetime'
+    ];
 
     public function chats(): HasMany
     {

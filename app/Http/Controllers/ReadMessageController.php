@@ -65,10 +65,11 @@ class ReadMessageController extends Controller
      */
     public function destroy($messageId, $userId)
     {
-        ReadMessage::where( [
+        $read = ReadMessage::where( [
                 ['message_id','=', $messageId],
                 ['user_id','=', $userId],
-            ])->delete();
+            ])->get();
+        $read->delete();
         return response()->json(['message' => 'Message has become unread successfully']);
     }
 }
