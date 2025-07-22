@@ -23,9 +23,9 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-                'title' => ['required', 'string', 'max:100'],
+                'title' => ['required', 'string',],
                 'chat_type' => ['required', 'string', 'in:personal,group'],
-                'chat_group_id' => ['required', 'exists:chat_groups,id'],
+                'chat_group_id' => ['required', 'exists:chats_group,id'],
         ]);
         if ($validator->fails()){
             return response()->json(['data'=> $validator->errors()],422);
@@ -51,7 +51,7 @@ class ChatController extends Controller
     public function update(Request $request, Chat $chat)
     {
         $validator = Validator::make($request->all(), [
-            'title'=> ['string','max:100'],
+            'title'=> ['string',],
         ]);
         if ($validator->fails()){
             return response()->json(['data'=> $validator->errors()],422);

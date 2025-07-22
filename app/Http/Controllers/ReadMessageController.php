@@ -21,8 +21,8 @@ class ReadMessageController extends Controller
     /**
      *Список пользователей, прочитавших сообщение
      */
-    public function list(Message $message){
-        $read = ReadMessage::where('message_id', $message->id())->orderBy('created_at','desc')->get();
+    public function list(int $messageId){
+        $read = ReadMessage::where('message_id', $messageId)->orderBy('created_at','desc')->get();
         return response()->json(['data'=> $read]);
     }
 
@@ -32,12 +32,12 @@ class ReadMessageController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message_id'=> ['required','integer','exists:messages,id'],
+            'message_id'=> ['required','integer', Rule::exists('messages', 'id')->whereNull('deleted_at')],
             'user_id'=> [
                 'required',
                 'integer',
-                'exists:users, id',
-                Rule::exists('read_messages','user_id')
+                'exists:users,id',
+                Rule::unique('read_messages','user_id')
                     ->where('message_id', $request->input('message_id')),
             ],
         ]);
@@ -54,7 +54,7 @@ class ReadMessageController extends Controller
     public function show(int $messageId, int $userId)
     {
         $read = ReadMessage::where([
-            ['message','=', $messageId],
+            ['message_id','=', $messageId],
             ['user_id','=', $userId],
         ])->get();
         return response()->json(['data'=> $read]);
@@ -65,11 +65,10 @@ class ReadMessageController extends Controller
      */
     public function destroy($messageId, $userId)
     {
-        $read = ReadMessage::where( [
-                ['message_id','=', $messageId],
-                ['user_id','=', $userId],
-            ])->get();
-        $read->delete();
+        ReadMessage::where( [
+            ['message_id','=', $messageId],
+            ['user_id','=', $userId],
+        ])->delete();
         return response()->json(['message' => 'Message has become unread successfully']);
     }
 }

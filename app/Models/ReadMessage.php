@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReadMessage extends Model
 {
+
     protected $table = 'read_messages';
     protected $fillable = ['user_id', 'message_id'];
-
+    public $incrementing = false;
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at'=> 'datetime',

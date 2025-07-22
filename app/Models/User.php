@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
+    use SoftDeletes;
     protected $table = 'users';
     protected $fillable = ['login', 'password', 'display_name', 'last_login'];
     protected $casts = [
@@ -17,7 +19,7 @@ class User extends Model
         'created_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-
+    
     public function chats(): BelongsToMany{
         return $this->belongsToMany(Chat::class);
     }

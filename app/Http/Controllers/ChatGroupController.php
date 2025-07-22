@@ -22,7 +22,7 @@ class ChatGroupController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string','max:100'],
+            'title' => ['required', 'string', 'unique:chats_group,title'],
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
@@ -37,16 +37,18 @@ class ChatGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ChatGroup $group)
+    public function show($id)
     {
+        $group = ChatGroup::findOrFail($id);
         return response()->json(['data' => $group]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ChatGroup $group)
+    public function update(Request $request, $id)
     {
+        $group = ChatGroup::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'title'=> ['string','max:100'],
         ]);
@@ -60,8 +62,9 @@ class ChatGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ChatGroup $group)
+    public function destroy($id)
     {
+        $group = ChatGroup::findOrFail($id);
         $group->delete();
         return response()->json(['message' => 'Chats group deleted successfully']);
     }

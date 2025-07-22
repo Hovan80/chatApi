@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('chat_group_id')->constrained('chat_groups', 'id');
+            $table->foreignId('chat_group_id')->constrained('chats_group', 'id');
             $table->string('title');
             $table->enum('chat_type', ['personal', 'group']);
             $table->timestamps();

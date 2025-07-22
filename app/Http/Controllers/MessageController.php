@@ -36,10 +36,9 @@ class MessageController extends Controller
                 'exists:chats,id',
                 Rule::exists('chat_members','chat_id')
                     ->where('user_id', $request->input('user_id'))
-                    ->where('is_deleted', false),
+                    ->where('deleted_at', null),
             ],
             'body' => ['required', 'string'],
-            'is_deleted' => ['boolean'],
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
@@ -70,14 +69,14 @@ class MessageController extends Controller
                 'exists:chats,id',
                 Rule::exists('chat_members','chat_id')
                     ->where('user_id', $request->input('user_id'))
-                    ->where('is_deleted', false),
+                    ->where('deleted_at', false),
             ],
             'body'=> 'string',
-            'is_deleted'=> 'boolean',
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
         }
+        $message->update($request->all());
         return response()->json([
             'data'=> $message,
             'message'=> 'Message update successfully'

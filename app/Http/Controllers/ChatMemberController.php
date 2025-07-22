@@ -6,16 +6,22 @@ use App\Models\ChatMember;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ChatMemberController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($chatId)
+    public function index()
     {
-        $members = ChatMember::where('chat_id', $chatId)->get();
+        $members = ChatMember::all();
         return response()->json(['data' => $members]);
+    }
+
+    public function list($chatId){
+        $members = ChatMember::where('chat_id', $chatId)->get();
+        return response()->json(['data'=> $members]);
     }
 
     /**
@@ -25,9 +31,12 @@ class ChatMemberController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'chat_id' => ['required', 'exists:chats,id'],
-            'user_id' => ['required', 'exists:users,id'],
-            'joined_at' => ['nullable', 'date'],
-            'left_at' => ['nullable', 'date', 'after:joined_at'],
+            'user_id' => [
+                'required',
+                'exists:users,id',
+                Rule::unique('chat_members', 'user_id')
+                    ->where('chat_id', $request->input('chat_id')),
+            ],
             'is_admin' => ['boolean'],
         ]);
         if ($validator->fails()) {
@@ -56,8 +65,6 @@ class ChatMemberController extends Controller
         $validator = Validator::make($request->all(),[
             'chat_id' => 'exists:chats,id',
             'user_id' => 'exists:users,id',
-            'joined_at' => ['nullable', 'date'],
-            'left_at'=> ['nullable', 'date', 'after:joined_at'],
             'is_admin' => 'boolean',
         ]);
         if ($validator->fails()) {

@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Chat extends Model
 {
+    use SoftDeletes;
     protected $table = "chats";
-    protected $fillable = ["title, chat_type, chat_group_id"];
+    protected $fillable = ['title', 'chat_type', 'chat_group_id'];
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at'=> 'datetime',
