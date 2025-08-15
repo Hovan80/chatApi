@@ -32,11 +32,13 @@ class ReadMessageController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message_id'=> ['required','integer', Rule::exists('messages', 'id')->whereNull('deleted_at')],
+            'message_id'=> [
+                'required|integer',
+                Rule::exists('messages', 'id')
+                    ->whereNull('deleted_at')
+            ],
             'user_id'=> [
-                'required',
-                'integer',
-                'exists:users,id',
+                'required|integer|exists:users,id',
                 Rule::unique('read_messages','user_id')
                     ->where('message_id', $request->input('message_id')),
             ],

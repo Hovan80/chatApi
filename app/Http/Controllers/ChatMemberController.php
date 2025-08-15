@@ -30,14 +30,13 @@ class ChatMemberController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'chat_id' => ['required', 'exists:chats,id'],
+            'chat_id' => 'required|exists:chats,id',
             'user_id' => [
-                'required',
-                'exists:users,id',
+                'required|exists:users,id',
                 Rule::unique('chat_members', 'user_id')
                     ->where('chat_id', $request->input('chat_id')),
             ],
-            'is_admin' => ['boolean'],
+            'is_admin' => 'boolean',
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);

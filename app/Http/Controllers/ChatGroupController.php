@@ -22,7 +22,7 @@ class ChatGroupController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'unique:chats_group,title'],
+            'title' => 'required|string|unique:chats_group,title',
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
@@ -50,7 +50,9 @@ class ChatGroupController extends Controller
     {
         $group = ChatGroup::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'title'=> ['string','max:100'],
+            'title'=> [
+                'string|max:100'
+            ],
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);

@@ -25,12 +25,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'login'=> [
-                'required',
-                'string',
-                'min:6',
-                'unique:users,login',
-            ],
+            'login' => 'required|string|min:6|unique:users,login',
             'password' => [
                 'required',
                 Password::min(8)
@@ -39,7 +34,7 @@ class UserController extends Controller
                     ->numbers()
                     ->symbols()
             ],
-            'display_name' => ['required', 'string',]
+            'display_name' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
@@ -66,11 +61,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validator = Validator::make($request->all(), [
-            'login'=> [
-                'string',
-                'min:6',
-                'unique:users,login',
-            ],
+            'login' => 'string|min:6|unique:users,login',
             'password' => [
                 Password::min(8)
                     ->letters()
@@ -78,7 +69,7 @@ class UserController extends Controller
                     ->numbers()
                     ->symbols()
             ],
-            'display_name' => ['string', 'filled']
+            'display_name' => 'string|filled'
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);

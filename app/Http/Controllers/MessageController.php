@@ -30,15 +30,14 @@ class MessageController extends Controller
     public function store(Request $request)
     {   
         $validator = Validator::make($request->all(), [
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => 'required|exists:users,id',
             'chat_id' => [
-                'required',
-                'exists:chats,id',
+                'required|exists:chats,id',
                 Rule::exists('chat_members','chat_id')
                     ->where('user_id', $request->input('user_id'))
                     ->where('deleted_at', null),
             ],
-            'body' => ['required', 'string'],
+            'body' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()],422);
