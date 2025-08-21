@@ -12,25 +12,32 @@ use App\Models\ChatMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('/users', UserController::class);
+Route::apiResources([
+    'users' => UserController::class,
+    'chat-groups' => ChatGroupController::class,
+    'chats' => ChatController::class,
+    'members' => ChatMemberController::class,
+    'messages' => MessageController::class,
+    'attachments' => AttachmentController::class,
+]);
 
-Route::apiResource('/chats-group', ChatGroupController::class);
+Route::get('members/chat/{chat}', [ChatMemberController::class, 'list'])
+    ->name('members.byChat');
 
-Route::apiResource('/chats', ChatController::class);
+// Сообщения: список по chat_id
+Route::get('messages/chat/{chat}', [MessageController::class, 'list'])
+    ->name('messages.byChat');
 
-Route::apiResource('/members', ChatMemberController::class);
-Route::get('/members/chat/{chat_id}', [ChatMemberController::class,'list']);
+// Метки «прочитано»: группируем под префиксом и общим контроллером
+Route::prefix('messages/read')
+    ->name('messages.read.')
+    ->controller(ReadMessageController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');    // все «прочитано»
+        Route::get('{message}', 'list')->name('list');      // прочитали конкретное сообщение
+        Route::get('{message}/{user}', 'show')->name('show');      // статус одного юзера
+        Route::post('/', 'store')->name('store');    // пометить прочитанным
+        Route::delete('{message}/{user}', 'destroy')->name('destroy'); // снять метку
+    });
 
-Route::controller(ReadMessageController::class)->group(function (){
-    Route::get('/messages/read', 'index');
-    Route::get('/messages/{messageId}/read', 'list');
-    Route::get('/messages/{message_id}/read/{user_id}', 'show');
-    Route::post('/messages/read/', 'store');
-    Route::delete('/messages/{message_id}/read/{user_id}', 'destroy');
-});
-
-Route::apiResource('/messages', MessageController::class);
-Route::get('messages/chat/{chat_id}/', [MessageController::class, 'list']);
-
-Route::apiResource('/attachments', AttachmentController::class);
 
