@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
+use App\Models\Chat;
 use App\Models\User;
+
 use Illuminate\Http\Request;
 
 class AttachmentController extends Controller
@@ -12,38 +15,29 @@ class AttachmentController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $attachments = Attachment::all();
+        return response()->json(['data' => $attachments]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Attachment $attachment)
     {
-        //
+        return response()->json(['data' => $attachment]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+    public function list(Chat $chat){
+        $attachments = $chat->messages()->attachments()->get();
+        return response()->json(['data' => $attachments]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Attachment $attachment)
     {
-        //
+        $attachment->delete();
+        return response()->json(['message' => 'Attachment delete successfully']);
     }
 }

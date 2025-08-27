@@ -28,10 +28,6 @@ class User extends Model
         return $this->belongsToMany(Message::class);
     }
 
-    public function attachments(): HasMany{
-        return $this->hasMany(Attachment::class);
-    }
-
     public function read(): HasMany{
         return $this->hasMany(ReadMessage::class);
     }

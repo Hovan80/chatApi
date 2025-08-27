@@ -8,11 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Attachment extends Model
 {
     protected $table = 'attachments';
-    protected $fillable = ['file_name, uploader_id'];
-
-    public function sender(): BelongsTo{
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['guid, message_id'];
 
     public function message(): BelongsTo{
         return $this->belongsTo(Message::class);
